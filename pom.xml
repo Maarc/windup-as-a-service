@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.jboss.windup</groupId>
+    <artifactId>windup-web-parent</artifactId>
+    <version>0.0.1</version>
+    <name>Windup Web Parent</name>
+    <description>Web front-end for the Windup migration tool</description>
+    <packaging>pom</packaging>
+    
+    <licenses>
+        <license>
+            <name>Eclipse Public License 1.0</name>
+            <url>http://www.eclipse.org/org/documents/epl-v10.html</url>
+        </license>
+    </licenses>
+        
+    <modules>
+        <module>windup_0_7</module>
+    </modules>
+
+</project>

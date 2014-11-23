@@ -1,5 +1,5 @@
 JBoss Windup
-===================
+============
 
 
 === What is Windup?

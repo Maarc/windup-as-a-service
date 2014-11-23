@@ -1,15 +1,16 @@
 JBoss Windup
-=====================
+===================
 
 
 === What is Windup?
 
 JBoss Windup is a framework for migrating software between different technologies; it was conceived to help with migrations from Weblogic and Websphere to JBoss, but has many more potential applications!
 
+
 === How do I run Windup?
 
-usage:
-+
+Usage of windup:
+
 [source,text]
 ----
 $ java -jar windup-cli.jar

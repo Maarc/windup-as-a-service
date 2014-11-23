@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--
+
+    JBoss, Home of Professional Open Source
+    Copyright 2012, Red Hat, Inc., and individual contributors
+    by the @authors tag. See the copyright.txt in the distribution for a
+    full listing of individual contributors.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<html>
+<head>
+    <title>Dropspace Upload</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <!-- Set the tab, home page, shortcut icons -->
+    <link rel="Shortcut Icon" href="img/aerogear_icon_16x.png">
+    <link rel="apple-touch-icon" href="img/aerogear_avatar_48px.png"/>
+
+    <!-- For minification, comment out this link -->
+    <!-- Shared styles -->
+    <link rel="stylesheet" href="css/screen.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="css/styles.css" />
+
+    <!-- Set viewport scaling and zoom features -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script type="text/javascript" src="js/libs/modernizr-2.5.3.min.js"></script>
+    <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+
+    <!-- Minification - See Readme for details -->
+    <!-- For minification, comment out this file -->
+    <script type="text/javascript" src="js/app.js"></script>
+    <!-- For minification, uncomment this file -->
+    <!-- <script type="text/javascript" src="js/app.min.js"></script> -->
+
+    <script type="text/javascript">
+        yepnope([{
+            //Load CDN hosted jQuery or fall back to local file.
+            /*--------Note-----------
+            This approach should only be used if you trust the source of where the resource (JavaScript) is located.
+            In this case, use of the jquery CDN is much faster if your user's browser already has this file cached.
+            If they don't have it cached, try to load it from the CDN as this will be faster if the user is
+            located closer to a CDN than you currently hosted server.
+            */
+            //load: "http://code.jquery.com/jquery-1.7.1.min.js",
+            load: "js/libs/jquery-1.7.1.min.js",
+            complete: function() {
+                if ( !window.jQuery ) {
+                    //In production, you would want to fall back to a minified file.
+                    //We fall back to the full version because Eclipse reports false errors in some minified JavaScript files.
+                    yepnope.load( "js/libs/jquery-1.7.1.min.js" );
+                }
+            }
+        },{
+            //device detection and asynchronous script loading
+            /*--------Note-----------
+            Here we're using the yepnope framework which gives us the ability to load scripts dynamically, based on
+            Modernizr's results.
+            With Modernizr, we use media queries and touch detection to see if we are on a mobile, touch based device
+            or if we're at anything less than 480px.. this gives us a mobile ui on desktop browsers when resized to <480px
+            width for testing.
+            */
+            test: Modernizr.mq( "only all and (max-width: 640px)" ),
+            yep: {
+                //assign labeled callbacks for later execution after script loads.
+                //we are on mobile device so load appropriate CSS
+                "jqmcss": "css/jquery.mobile-1.1.0.min.css",
+                // For minification, uncomment this line
+                //"mcss": "css/m.screen.min.css"
+                // For minification, comment out this line
+                "mcss": "css/m.screen.css"
+            },
+            nope: {
+                //we are on desktop
+                // For minification, uncomment this line
+                //"scss": "css/d.screen.min.css"
+                // For minification, comment out this line
+            	"scss": "css/d.screen.css"
+            },
+            callback: {
+                //use the labeled callbacks from above, and load jQuery Mobile
+                "jqmcss": function( url, result, key ) {
+                    yepnope({
+                        load: "http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js",
+                        complete: function() {
+                            if ( !$.mobile ) {
+                                yepnope( "js/libs/jquery.mobile-1.1.0.min.js" );
+                            }
+                        }
+                    });
+                },
+                "scss": function( url, result, key ) {
+                    $( document ).ready( function() {
+                        //here we are moving content around based on the browser/device.
+                        $( "aside" ).insertAfter( $( "section" ) );
+                    });
+                }
+            },
+            complete: function() {
+                $( document ).ready( function() {
+                    //setup the app after all scripts have loaded
+                    $( "#container" ).show();
+                });
+
+                $.fn.serializeObject = function() {
+                    var o = {};
+                    var a = this.serializeArray();
+                    $.each(a, function() {
+                        if (o[this.name]) {
+                            if (!o[this.name].push) {
+                                o[this.name] = [o[this.name]];
+                            }
+                            o[this.name].push(this.value || '');
+                        } else {
+                            o[this.name] = this.value || '';
+                        }
+                    });
+                    return o;
+                };
+            }
+        }]);
+
+
+    </script>
+</head>
+<body>
+    <div id="container" style="display:none">
+        <div class="logo">
+            <img src="img/aerogear_logo_150px.png"/>
+        </div>
+        <div class="dualbrand">
+            <img src="img/dualbrand_logo.png"/>
+        </div>
+        <section>
+            <h1>Welcome to dropspace</h1>
+            <article id="intro-art" data-role="page" data-theme="a">
+                <!-- Header -->
+                <div data-role="header" class="header">
+                    <img class="header_logo" src="img/icon_medium.png"/>
+                    <h3>Dropspace</h3>
+                    <a href="#info-aside" data-role="button" data-icon="info" class="ui-btn-right" data-iconpos="notext" data-rel="dialog"></a>
+                </div>
+                <!-- /Header -->
+
+                <div data-role="content">
+
+                    <img src="img/dualbrand_as7eap.png" class="max-width-100"/>
+                    <p>This Application uses next generation technologies such as HTML5 and CSS3 as well as OpenShift.</p>
+                    <div class="highlights">
+                        <ul>
+                            <li>This Application stores your files on OpenShift</li>
+                            <li>This Application is usable on your Desktop and mobile Device</li>
+                        </ul>
+                    </div>
+                    <div class="highlights">
+                        <ul>
+                            <li>jQuery Mobile Integration</li>
+                            <li>QUnit testing for JavaScript validation</li>
+                        </ul>
+                    </div>
+
+                    <ul id="features">
+                        <li class="feature">Pure HTML client</li>
+                        <li class="feature">JAX-RS GET &amp; POST end points</li>
+                        <li class="feature">HTML5 based page structure</li>
+                        <li class="feature">HTML5 form element &amp; validation</li>
+                        <li class="feature">CSS3 selectors used for styling</li>
+                        <li class="feature">JAX-RS validation handling</li>
+                        <li class="feature">jQuery Mobile integration</li>
+                        <li class="feature">QUnit test suite to validate JavaScript</li>
+                    </ul>
+
+                </div>
+
+            </article>
+
+            <article id="upload-art" data-role="page" data-theme="a">
+               <h3>Dropspace File Upload</h3>
+                <div data-role="content">
+                    <!-- For now mapping bean validation constraints from server side model is a manual task -->
+					<form id="upload" name="upload" action="rest/upload" method="POST" enctype="multipart/form-data">
+						<fieldset>
+	                            <legend>Choose some files</legend>
+								<div>
+									<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" size="48"/>
+									<div id="filedrag">or drop files here</div>
+								</div>
+								
+								<div id="submitbutton">
+									<button type="submit">Upload</button>							
+								</div>
+						</fieldset>
+					</form>
+				</div>
+				
+				<br/>
+				
+				<div id="progress"></div>
+
+				<br/>
+				
+				<fieldset id="messages">
+					<legend>Status messages</legend>
+				</fieldset>
+            </article>
+
+        </section>
+
+        <!-- New HTML5 footer tag -->
+        <footer>
+            <p>This project was created by Red Hat Consulting.<br/></p>
+        </footer>
+    </div>
+    <script src="js/filedrag.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+Windrop
+==============================================================================================
+
+What is it?
+-----------
+
+This sub-project contains the front-end of "windup-web". It is based on parts of the "https://github.com/juhoffma/dropspace" prototype.
+
+This application is built using a HTML5 + REST approach. This uses a pure HTML client that interacts with with the application server via restful end-points (JAX-RS). This application also uses some of the latest HTML5 features and advanced JAX-RS. And since testing is just as important with client side as it is server side, this application uses QUnit to show you how to unit test your JavaScript.
+
+
+Deploying the application
+-------------------------
+
+First you need to start the JBoss container. To do this, run
+  
+    $JBOSS_HOME/bin/standalone.sh
+  
+or if you are using windows
+ 
+    $JBOSS_HOME/bin/standalone.bat
+    
+To deploy the application, you first need to produce the archive to deploy using the following Maven goal:
+
+    mvn package
+
+You can now deploy the artifact by executing the following command:
+
+    mvn jboss-as:deploy
+
+The client application will be running at the following URL <http://localhost:8080/windrop/>.
+
+To undeploy run this command:
+
+    mvn jboss-as:undeploy
+
+

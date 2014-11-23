@@ -5,7 +5,7 @@
     <groupId>org.jboss.windup</groupId>
     <artifactId>windup-web-parent</artifactId>
     <version>0.0.1</version>
-    <name>Windup Web Parent</name>
+    <name>Windup-Web Parent Pom</name>
     <description>Web front-end for the Windup migration tool</description>
     <packaging>pom</packaging>
     
@@ -18,6 +18,7 @@
         
     <modules>
         <module>windup_0_7</module>
+        <module>windrop</module>
     </modules>
 
 </project>

@@ -1,25 +1,7 @@
 <!DOCTYPE html>
-<!--
-
-    JBoss, Home of Professional Open Source
-    Copyright 2012, Red Hat, Inc., and individual contributors
-    by the @authors tag. See the copyright.txt in the distribution for a
-    full listing of individual contributors.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
 <html>
 <head>
-    <title>Dropspace Upload</title>
+    <title>WindDrop - Windup Web Fronted</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
     <!-- Set the tab, home page, shortcut icons -->
@@ -135,62 +117,30 @@
 </head>
 <body>
     <div id="container" style="display:none">
-        <div class="logo">
-            <img src="img/aerogear_logo_150px.png"/>
-        </div>
-        <div class="dualbrand">
-            <img src="img/dualbrand_logo.png"/>
-        </div>
         <section>
-            <h1>Welcome to dropspace</h1>
+            <h1>WindDrop - Windup Web Frontend</h1>
             <article id="intro-art" data-role="page" data-theme="a">
                 <!-- Header -->
                 <div data-role="header" class="header">
                     <img class="header_logo" src="img/icon_medium.png"/>
-                    <h3>Dropspace</h3>
+                    <h3>WindDrop</h3>
                     <a href="#info-aside" data-role="button" data-icon="info" class="ui-btn-right" data-iconpos="notext" data-rel="dialog"></a>
                 </div>
                 <!-- /Header -->
-
                 <div data-role="content">
-
-                    <img src="img/dualbrand_as7eap.png" class="max-width-100"/>
-                    <p>This Application uses next generation technologies such as HTML5 and CSS3 as well as OpenShift.</p>
-                    <div class="highlights">
-                        <ul>
-                            <li>This Application stores your files on OpenShift</li>
-                            <li>This Application is usable on your Desktop and mobile Device</li>
-                        </ul>
-                    </div>
-                    <div class="highlights">
-                        <ul>
-                            <li>jQuery Mobile Integration</li>
-                            <li>QUnit testing for JavaScript validation</li>
-                        </ul>
-                    </div>
-
-                    <ul id="features">
-                        <li class="feature">Pure HTML client</li>
-                        <li class="feature">JAX-RS GET &amp; POST end points</li>
-                        <li class="feature">HTML5 based page structure</li>
-                        <li class="feature">HTML5 form element &amp; validation</li>
-                        <li class="feature">CSS3 selectors used for styling</li>
-                        <li class="feature">JAX-RS validation handling</li>
-                        <li class="feature">jQuery Mobile integration</li>
-                        <li class="feature">QUnit test suite to validate JavaScript</li>
-                    </ul>
-
+					<br/><br/>
+					Here you can upload one of your java application as an EAR or WAR file and then let windup process it.
+					<br/><br/>
                 </div>
 
             </article>
 
             <article id="upload-art" data-role="page" data-theme="a">
-               <h3>Dropspace File Upload</h3>
                 <div data-role="content">
                     <!-- For now mapping bean validation constraints from server side model is a manual task -->
 					<form id="upload" name="upload" action="rest/upload" method="POST" enctype="multipart/form-data">
 						<fieldset>
-	                            <legend>Choose some files</legend>
+	                            <legend>Upload</legend>
 								<div>
 									<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" size="48"/>
 									<div id="filedrag">or drop files here</div>

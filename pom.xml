@@ -18,7 +18,7 @@
         
     <modules>
         <module>windup_0_7</module>
-        <module>windrop</module>
+        <module>winddrop</module>
     </modules>
 
 </project>

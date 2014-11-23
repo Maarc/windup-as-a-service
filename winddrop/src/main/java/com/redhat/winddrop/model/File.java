@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.windrop.model;
+package com.redhat.winddrop.model;
 
 import java.io.Serializable;
 

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.windrop.data;
+package com.redhat.winddrop.data;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -23,7 +23,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import com.redhat.windrop.model.File;
+import com.redhat.winddrop.model.File;
 
 /**
  * DAO for Files.

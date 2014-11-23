@@ -1,4 +1,4 @@
-Windrop
+WindDrop
 =======
 
 === What is it?
@@ -38,7 +38,7 @@ You can now deploy the artifact by executing the following command:
 mvn jboss-as:deploy
 ----
 
-The client application will be running at the following URL <http://localhost:8080/windrop/>.
+The client application will be running at the following URL <http://localhost:8080/winddrop/>.
 
 To undeploy run this command:
 
@@ -48,3 +48,6 @@ mvn jboss-as:undeploy
 ----
 
 
+=== Accessing WinDrop
+
+Here it is: http://localhost:8080/winddrop/

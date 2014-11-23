@@ -1,4 +1,4 @@
-package com.redhat.windrop.rest;
+package com.redhat.winddrop.rest;
 
 import java.util.logging.Logger;
 
@@ -11,8 +11,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.redhat.windrop.data.FileRepository;
-import com.redhat.windrop.model.File;
+import com.redhat.winddrop.data.FileRepository;
+import com.redhat.winddrop.model.File;
 
 @RequestScoped
 @Path("/dl")

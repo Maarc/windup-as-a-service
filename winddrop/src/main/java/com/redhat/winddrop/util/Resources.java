@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.windrop.util;
+package com.redhat.winddrop.util;
 
 import java.util.logging.Logger;
 
@@ -37,7 +37,6 @@ import javax.persistence.PersistenceContext;
  */
 public class Resources {
    // use @SuppressWarnings to tell IDE to ignore warnings about field not being referenced directly
-   @SuppressWarnings("unused")
    @Produces
    @PersistenceContext
    private EntityManager em;

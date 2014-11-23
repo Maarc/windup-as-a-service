@@ -1,4 +1,4 @@
-package com.redhat.windrop.rest;
+package com.redhat.winddrop.rest;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,7 +22,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
-import com.redhat.windrop.data.FileRepository;
+import com.redhat.winddrop.data.FileRepository;
 
 /**
  * REST upload service.

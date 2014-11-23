@@ -12,10 +12,10 @@ The version of Windup in use is 0.7. Several rules have been added to provide mo
 
 === Build
 
-1. Execute a maven build as follows
+1. Execute a maven build of the project
 +
 [source,text]
 ----
-[windup-web]$ mvn clean install
+$ mvn clean package
 ----
 

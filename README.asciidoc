@@ -1,0 +1,21 @@
+Windup web frontend
+===================
+
+
+=== Overview
+
+This project aims at providing a nice web frontend for windup letting it run on-demand / as-a-service.
+
+The version of Windup in use is 0.7. Several rules have been added to provide more concrete hints for the application migration.
+
+
+
+=== Build
+
+1. Execute a maven build as follows
++
+[source,text]
+----
+[windup-web]$ mvn clean install
+----
+

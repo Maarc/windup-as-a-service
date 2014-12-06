@@ -1,4 +1,4 @@
-Windup web frontend
+Windup as a Service
 ===================
 
 
@@ -6,16 +6,97 @@ Windup web frontend
 
 This project aims at providing a nice web frontend for windup letting it run on-demand / as-a-service.
 
-The version of Windup in use is 0.7. Several rules have been added to provide more concrete hints for the application migration.
+It is composed of two sub-projects:
 
+* Windup_0_7: Custom lightweight build of Windup 0.7
+
+Some rules have been added and the default decompiler has been replaced by the fernflower one. It packages its libraries into a JBoss Module available under "windup_0_7/windup-cli/target/windup-cli-0.7.0-jboss/windup-cli-0.7.0"
+
+* WindDrop: Web-fronted exposing the windup functionality as a service.
+
+All uploaded files and generated windup reports will be savec locally in the "/tmp/winddrop" directory. 
+
+This application ...
+- is built using an HTML5 + REST approach. 
+- uses a queue to decouple the file upload from the windup processing.
+- was initially based on a html5 kitchensink quickstart and on the "https://github.com/juhoffma/dropspace" prototype.
+
+
+=== Preparation
+
+Important: all uploaded files will be copied under the /tmp/winddrop directory. You can change this directory by updating the "WINDDROP_BASE_DIR" String in "winddrop/src/main/java/com/redhat/winddrop/util/FileUtil.java".
 
 
 === Build
 
-1. Execute a maven build of the project
+
+1. Import the two following libraries in maven
++
+[source,text]
+----
+$ mvn install:install-file -Dfile=./lib/fernflower-1.0.jar -DgroupId=fernflower -DartifactId=fernflower -Dversion=1.0 -Dpackaging=jar
+$ mvn install:install-file -Dfile=./lib/jd-core-java-1.0.jar -DgroupId=jd-decompiler -DartifactId=jd-core-java -Dversion=1.0 -Dpackaging=jar
+----
+
+
+2. Execute a maven build of the project
 +
 [source,text]
 ----
 $ mvn clean package
 ----
+
+
+3. Add (or symlink) the windup JBoss module to your EAP 6 installation
++
+[source,text]
+----
+$ ln -s $(pwd)/windup_0_7/windup-cli/target/windup-cli-0.7.0-jboss/windup-cli-0.7.0/org/jboss/windup ${JBOSS_HOME}/modules/system/layers/base/org/jboss/windup
+----
+
+or
++
+[source,text]
+----
+$ cp -Rfp $(pwd)/windup_0_7/windup-cli/target/windup-cli-0.7.0-jboss/windup-cli-0.7.0/org/jboss/windup ${JBOSS_HOME}/modules/system/layers/base/org/jboss/.
+----
+
+
+4. Then  you need to start a JBoss EAP 6.3.x container using the full profile. To do this, run ...
++
+[source,text]
+----
+${JBOSS_HOME}/bin/standalone.sh -c standalone-full.xml
+----
+
+
+5. Deploy the WindDrop application.
++
+[source,text]
+----
+$ cd winddrop
+$ mvn clean package jboss-as:deploy
+----
+
+
+6. Access the application running at the following URL: http://localhost:8080/winddrop/
+
+There you can upload an WAR or EAR file. The generated report will be stored on "/tmp/windrop/storage".
+
+
+
+=== Todo
+
+[Priority 1]
+- Rename in WaaS (Windup as a Service)
+- Add input field for packages / email
+- Overview UI displaying the available reports.
+- Send email informing about the newly available report
+
+[Priority 2]
+- Integration with Windup 2.0
+- Include the execution logs into the zip file.
+
+
+
 

@@ -52,12 +52,7 @@ $ mvn clean package
 [source,text]
 ----
 $ ln -s $(pwd)/windup_0_7/windup-cli/target/windup-cli-0.7.0-jboss/windup-cli-0.7.0/org/jboss/windup ${JBOSS_HOME}/modules/system/layers/base/org/jboss/windup
-----
-
-or
-+
-[source,text]
-----
+// or
 $ cp -Rfp $(pwd)/windup_0_7/windup-cli/target/windup-cli-0.7.0-jboss/windup-cli-0.7.0/org/jboss/windup ${JBOSS_HOME}/modules/system/layers/base/org/jboss/.
 ----
 
@@ -79,7 +74,7 @@ $ mvn clean package jboss-as:deploy
 ----
 
 
-6. Access the application running at the following URL: http://localhost:8080/winddrop/
+6. Access the application running here: http://localhost:8080/winddrop/
 
 There you can upload an WAR or EAR file. The generated report will be stored on "/tmp/windrop/storage".
 

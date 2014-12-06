@@ -1,28 +1,31 @@
 package com.redhat.winddrop.rest;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.Queue;
+import javax.jms.Session;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import com.redhat.winddrop.data.FileRepository;
+import com.redhat.winddrop.util.FileUtil;
 
 /**
  * REST upload service.
@@ -38,8 +41,12 @@ public class UploadService {
 
 	@Inject
 	private FileRepository fileRepository;
+	
+	@Resource(mappedName = "java:/ConnectionFactory")
+	private ConnectionFactory connectionFactory;
 
-	private final static String FILE_SEPARATOR = System.getProperty("file.separator");
+	@Resource(mappedName = "java:/queue/WindupExecutionQueueMDB")
+	private Queue queue;
 	
 	/**
 	 * 
@@ -60,18 +67,20 @@ public class UploadService {
 		for (InputPart inputPart : inputParts) {
 
 			try {
-
 				String fileName = getFileName(inputPart.getHeaders());
 
 				LOG.info(">>> uploadFile - " + fileName + "sent to the server");
 
-				// convert the uploaded file to inputstream
-				InputStream inputStream = inputPart.getBody(InputStream.class, null);
+				// store the file somewhere else
+				hashValue = FileUtil.storeFile(IOUtils.toByteArray(inputPart.getBody(InputStream.class, null)), fileName, fileRepository);
 
-				byte[] bytes = IOUtils.toByteArray(inputStream);
-
-				// stores the file somewhere else
-				hashValue = storeFile(bytes, fileName);
+				LOG.info("Adding the artefact to the windup execution queue " + hashValue +" - "+fileName);
+				if(fileName.endsWith(".war")||fileName.endsWith(".ear")) {
+					// put the file in a queue to be processed by windup)
+					queueWindupExecution(hashValue);
+				} else {
+					LOG.info(fileName + " is not an EAR or WAR binary deployment and will be ignored by Windup.");
+				}
 
 			} catch (Exception e) {
 				LOG.log(Level.SEVERE, ">>> uploadFile - This should not have happened", e);
@@ -85,8 +94,20 @@ public class UploadService {
 	}
 
 	/**
+	 * @param hashValue
+	 * @throws JMSException
+	 */
+	private void queueWindupExecution(String hashValue) throws JMSException {
+
+		Connection connection = connectionFactory.createConnection();
+		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		session.createProducer(queue).send(session.createTextMessage(hashValue));
+	}
+
+	/**
 	 * @param header  Header sample { Content-Type=[image/png], Content-Disposition=[form-data;
      * name="file"; filename="filename.extension"] }
+	 * 
 	 * @return a filename that replaces all double quotes with nothing
 	 */
 	private String getFileName(MultivaluedMap<String, String> header) {
@@ -99,54 +120,5 @@ public class UploadService {
 		throw new IllegalStateException("The uploaded file has no name.");
 	}
 
-	/**
-	 * Stores the file somewhere else.
-	 * 
-	 * @param content the bytes of the file
-	 * @param uploadedFileName the filename of the uploaded file
-	 * @throws Exception
-	 */
-	protected String storeFile(byte[] content, String uploadedFileName) throws Exception {
 
-        final String hashValue = DigestUtils.sha256Hex(uploadedFileName + System.currentTimeMillis());
-		final String time = FastDateFormat.getInstance("yyyy-MM-dd-HH.mm.ss").format(System.currentTimeMillis());
-        String fileDirectory = System.getenv("OPENSHIFT_DATA_DIR");
-        if(StringUtils.isEmpty(fileDirectory))
-        {
-        	fileDirectory = FILE_SEPARATOR+"tmp";
-        }
-        final String storageFileName = fileDirectory + FILE_SEPARATOR  + uploadedFileName + "-" + hashValue + "-" + time + ".uploaded";
-
-		File file;
-		FileOutputStream fop = null;
-		boolean success = false;
-		try {
-			file = new File(storageFileName);
-			if (file.createNewFile()) {
-                fop = new FileOutputStream(file);
-                fop.write(content);
-                fop.flush();
-                success = true;
-			}
-            else
-            {
-                throw new Exception("File " + storageFileName + " already exists");
-            }
-		} catch (Exception e) {
-            LOG.log(Level.WARNING, "Caught an exception while trying to store file " + storageFileName + " (" + e.getMessage()+")");
-			throw e;
-		} finally {
-			if (success) {
-				fileRepository.storeFile(uploadedFileName, storageFileName, hashValue);
-			} else {
-				new File(storageFileName).delete();
-			}
-
-			if (fop != null) {
-				fop.close();
-			}
-		}
-
-		return hashValue;
-	}
 }

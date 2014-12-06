@@ -6,7 +6,11 @@
 		<version>0.7.0</version>
 		<relativePath>..</relativePath>
 	</parent>
+	
 	<artifactId>windup-reporting</artifactId>
+	<groupId>org.jboss.windup</groupId>
+	<version>${project.parent.version}</version>
+	<packaging>jar</packaging>
 
 	<dependencies>
 		<dependency>

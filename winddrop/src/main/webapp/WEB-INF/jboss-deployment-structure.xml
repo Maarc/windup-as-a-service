@@ -1,0 +1,28 @@
+<jboss-deployment-structure>
+    <deployment>
+        <exclusions>
+<!--             <module name="org.apache.commons.logging" /> -->
+<!--             <module name="org.apache.commons.collections" /> -->
+            <module name="org.apache.log4j" />
+
+<!--             <module name="javaee.api" /> -->
+<!--             <module name="org.dom4j" /> -->
+<!--             <module name="org.slf4j" /> -->
+<!--             <module name="org.antlr" /> -->
+<!--             <module name="asm.asm" /> -->
+<!--             <module name="org.javassist" /> -->
+        </exclusions>
+        <dependencies>
+            <module name="org.jboss.windup"  export="true" meta-inf="export" >
+<!--                            <imports> -->
+<!--                                <include path="META-INF**" /> -->
+<!--                                <include path="org**" /> -->
+<!--                                <include path="schemas**" /> -->
+<!--                                <include path="namespace**" /> -->
+<!--                            </imports> -->
+            
+            </module>  
+			<!-- <module name="javax.api" /> -->
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>

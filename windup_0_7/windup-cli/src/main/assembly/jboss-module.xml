@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>jboss</id>
+    <formats>
+        <format>dir</format>
+    </formats>
+
+    <!-- Adds dependencies to zip package under lib directory -->
+    <dependencySets>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>org/jboss/windup/main/lib</outputDirectory>
+            <unpack>false</unpack>
+        </dependencySet>
+    </dependencySets>
+
+    <fileSets>
+        <fileSet>
+            <directory>src/main/assembly/module</directory>
+            <outputDirectory>org/jboss/windup/main/</outputDirectory>
+            <includes>
+                <include>*.xml</include>
+            </includes>
+        </fileSet>
+
+<!--         <fileSet> -->
+<!--             <directory>src/main/assembly/module</directory> -->
+<!--             <outputDirectory>org/jboss/windup/main/lib</outputDirectory> -->
+<!--             <includes> -->
+<!--                 <include>*.jar</include> -->
+<!--             </includes> -->
+<!--         </fileSet> -->
+    
+        <fileSet>
+            <directory>src/main/assembly/extensions</directory>
+            <outputDirectory>org/jboss/windup/main/rules/extensions/</outputDirectory>
+            <includes>
+                <include>*.xml</include>
+            </includes>
+        </fileSet>
+        
+        <fileSet>
+            <directory>../windup-rules/src/main/resources</directory>
+            <outputDirectory>org/jboss/windup/main/rules/base/</outputDirectory>
+            <includes>
+                <include>*.xml</include>
+                <include>**/*.xml</include>
+            </includes>
+        </fileSet>
+        
+        <fileSet>
+            <directory>${project.build.directory}/assembly-temp</directory>
+            <outputDirectory>org/jboss/windup/main</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

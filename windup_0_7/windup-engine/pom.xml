@@ -7,6 +7,9 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>windup-engine</artifactId>
+	<groupId>org.jboss.windup</groupId>
+	<packaging>jar</packaging>
+	<version>${project.parent.version}</version>
 	<name>Windup Engine</name>
 	<description>The Engine for JBoss Windup.</description>
 	<build>

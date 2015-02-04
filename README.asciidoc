@@ -83,10 +83,8 @@ There you can upload an WAR or EAR file. The generated report will be stored on 
 === Todo
 
 
-- Add input field for packages / email
-- Overview UI displaying the available reports.
 - Send email informing about the newly available report
 - Integration with Windup 2.0
 - Include the execution logs into the zip file.
-
+- Replace yepnope by something else (e.g. require.js https://github.com/SlexAxton/yepnope.js#deprecation-notice)
 

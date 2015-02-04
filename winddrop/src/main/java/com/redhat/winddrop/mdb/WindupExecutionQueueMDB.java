@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,19 +38,18 @@ import org.jboss.windup.WindupEnvironment;
 import org.jboss.windup.reporting.ReportEngine;
 
 import com.redhat.winddrop.data.FileRepository;
+import com.redhat.winddrop.rest.UploadService;
 import com.redhat.winddrop.util.FileUtil;
 
 /**
  * <p>
- * A simple Message Driven Bean that asynchronously receives and processes the
- * messages that are sent to the queue.
+ * A simple Message Driven Bean processing asynchronously all queued windup executions.
  * </p>
- * 
- * @author Serge Pagop (spagop@redhat.com)
- * 
  */
-@MessageDriven(name = "WindupExecutionQueueMDB", activationConfig = { @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+@MessageDriven(name = "WindupExecutionQueueMDB", activationConfig = { 
+		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
 		@ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/WindupExecutionQueueMDB"),
+		@ActivationConfigProperty(propertyName = "maxSession", propertyValue = "1"),
 		@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge") })
 public class WindupExecutionQueueMDB implements MessageListener {
 
@@ -61,26 +61,33 @@ public class WindupExecutionQueueMDB implements MessageListener {
 	/**
 	 * @see MessageListener#onMessage(Message)
 	 */
-	public void onMessage(Message rcvMessage) {
-		String hashValue = null;
+	public void onMessage(Message message) {
+		String jobDescription = null;
 		try {
-			if (rcvMessage instanceof TextMessage) {
-				hashValue = ((TextMessage) rcvMessage).getText();
-				LOG.info("Message received for Windup execution: " + hashValue);
-				buildAndUploadReport(hashValue, "nl");
+			if (message instanceof TextMessage) {
+				jobDescription = ((TextMessage) message).getText();
+				
+				StringTokenizer t = new StringTokenizer(jobDescription,UploadService.TOKEN);
+				String hashValue = t.nextToken();
+				String packages = t.nextToken();
+				String email = t.nextToken();				
+				LOG.info("Message received for Windup execution: " + jobDescription);
+				LOG.info("hashValue: " +hashValue+" - email: "+email+" - packages: "+packages);				
+				buildAndUploadReport(hashValue, email, packages);
 			} else {
-				LOG.warning("Message of wrong type: " + rcvMessage.getClass().getName());
+				LOG.warning("Message of wrong type: " + message.getClass().getName());
 			}
 		} catch (Throwable t) {
-			LOG.log(Level.SEVERE, "Error occured in onMessage for hashValue " + hashValue, t);
+			LOG.log(Level.SEVERE, "Error occured in onMessage for hashValue " + jobDescription, t);
 		}
 	}
 
-	public void buildAndUploadReport(String hashValue, String packageSignature) {
-		LOG.info(">>> buildAndUploadReport (hashValue=" + hashValue + ",packageSignature=" + packageSignature + ")");
+	public void buildAndUploadReport(String hashValue, String submitter, String packages) {
+		LOG.info(">>> buildAndUploadReport (hashValue=" + hashValue + ",packages=" + packages + ")");
 		List<File> filesToDelete = new ArrayList<File>();
 		try {
-			com.redhat.winddrop.model.File storedBinary = fileRepository.findByHashValue(hashValue);
+			com.redhat.winddrop.model.File storedBinaryFile = fileRepository.findByHashValue(hashValue);
+			fileRepository.startProcessingReportRequest(storedBinaryFile);
 
 			String windupOutputDirectoryName = FileUtil.WINDDROP_TMP_DIR + hashValue + "_out" + FileUtil.FILE_SEPARATOR;
 			File windupOutputDirectory = new File(windupOutputDirectoryName);
@@ -92,18 +99,18 @@ public class WindupExecutionQueueMDB implements MessageListener {
 			windupInputDirectory.mkdir();
 			filesToDelete.add(windupInputDirectory);
 
-			File windupInputFile = new File(windupInputDirectoryName + storedBinary.getUploadedFileName());
+			File windupInputFile = new File(windupInputDirectoryName + storedBinaryFile.getUploadedFileName());
 
 			// Copying the uploaded file and use it as input for windup.
-			FileUtil.copy(new File(StringUtils.trim(storedBinary.getStorageFileName())), windupInputFile);
+			FileUtil.copy(new File(StringUtils.trim(storedBinaryFile.getStorageFileName())), windupInputFile);
 			filesToDelete.add(windupInputFile);
 			// Create the output directory.
 
 			// Execute windup
-			executeWindup(packageSignature, windupInputFile, windupOutputDirectory);
+			executeWindup(packages, windupInputFile, windupOutputDirectory);
 
 			// Zip the resulting report
-			String zippedReportFileName = storedBinary.getUploadedFileName() + "_windup_report_" + FileUtil.getCurrentFormattedDate() + ".zip";
+			String zippedReportFileName = storedBinaryFile.getUploadedFileName() + FileUtil.REPORT_EXTENSION;
 			File zippedReport = new File(windupInputDirectoryName + zippedReportFileName);
 			filesToDelete.add(zippedReport);
 			LOG.info("["+hashValue+"] Zipping the created report ...");
@@ -111,7 +118,8 @@ public class WindupExecutionQueueMDB implements MessageListener {
 
 			// Upload the result
 			LOG.info("["+hashValue+"] Storing report ...");
-			hashValue = FileUtil.storeFile(zippedReport, zippedReportFileName, fileRepository);
+			fileRepository.removeReportRequest(hashValue);
+			hashValue = FileUtil.storeFile(zippedReport, zippedReportFileName, fileRepository, submitter, packages, true, true);
 			LOG.info("["+hashValue+"] Execution successfull ... wget http://localhost:8080/winddrop/rest/dl/file/" + hashValue);
 
 		} catch (Throwable t) {

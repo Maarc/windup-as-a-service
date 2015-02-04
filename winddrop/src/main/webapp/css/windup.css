@@ -1,0 +1,199 @@
+html, body {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	height: 100%;
+}
+
+.windup-callout {
+	border: 1px solid #CCC;
+	background: whitesmoke;
+	border-radius: 10px;
+	padding: 10px;
+	margin: 10px 0;
+}
+
+.windup-demo-bar {
+	 width:100%; 
+	 border-bottom: 2px solid #0e1f2b;
+	 padding: 20px; 
+	 background: whitesmoke;
+}
+
+.windup-modal-large {
+	max-height: 800px;
+	width: 800px;
+}
+
+.wrapper {
+	margin-top: 60px;
+	min-height: 100%;
+	overflow:auto;
+	padding-bottom:60px; /* this needs to be bigger than footer height*/
+}
+
+.no-footer {
+	padding-bottom:0; 
+}
+
+.cloudbg { 
+	padding: 20px;
+}
+
+.footer {
+  position: relative;
+  margin-top: -60px; /* negative value of footer height */
+  height: 60px;
+  clear:both;
+  padding-top:20px;
+  background: whitesmoke;
+  border-top: 3px solid #0e1f2b;
+} 
+
+h1 {
+	color: #0e1f2b;
+}
+
+.windup-hero-icon {
+	text-align:center;
+}
+
+.navbar-inner {
+	height: 60px;
+	color: #00254b;
+}
+
+.page-header {
+  margin-bottom: 30px;
+  font-size: 18px;
+  font-weight: 200;
+  line-height: 30px;
+  color: inherit;
+  background: #f2f7fb url(../img/hero_background.png) bottom center;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+.muted {
+	color: #FFF;
+}
+
+.hero-unit {
+	border-bottom: 3px solid #00254b;
+	border-radius: 0;
+}
+
+
+.brand {
+	padding-top:10px !important;
+}
+
+.demo-bar {
+	border-bottom: 2px solid #00254b;
+	background: #427dba;
+}
+
+.push {
+	height: 4em;
+	display:block;
+}
+
+.page {
+	//background-color:#FFF;
+	border-radius: 10px;
+	padding: 20px;
+	//border: 3px solid #0e1f2b;
+	//box-shadow: 0px 0px 30px #FFF;
+	z-index: 1000;
+}
+
+
+div.footer-logo {
+	padding:10px;
+	text-align: center;
+}
+
+
+.windup-nav-right {
+	height:60px;
+	float:right;
+}
+
+a.social {
+	width:24px;
+	height:24px;
+	padding:18px 5px;
+	line-height:60px;
+}
+
+.main {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -4em;
+}
+
+.cloudbg {
+	min-height: 100%;
+	background: #c9dbe9;
+	background: -webkit-linear-gradient(top, #c9dbe9 0%, #fff 200px);
+	background: -linear-gradient(top, #c9dbe9 0%, #fff  200px);
+	background: -moz-linear-gradient(top, #c9dbe9 0%, #fff 200px);
+}
+
+hr {
+	border: 0;
+    height: 1px;
+   1 background-image: -webkit-linear-gradient(left, rgba(211,211,211,0), rgba(211,211,211,0.75), rgba(211,211,211,0)); 
+    background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+    background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+    background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+    margin: 30px 0;
+}
+
+.windup-box {
+	color: #AAA;
+}
+
+.content-header {
+	padding: 30px;
+	font-size: 60px;
+	background: #f2f7fb url(../img/cloudbg.png) bottom repeat-x;
+	background-repeat: repeat-x;
+
+	animation: animatedBackground 20s linear infinite;
+	-ms-animation: animatedBackground 20s linear infinite;
+	-moz-animation: animatedBackground 20s linear infinite;
+	-webkit-animation: animatedBackground 20s linear infinite;
+}
+
+.content-header h1 {
+	line-height: 99px;
+}
+
+@keyframes animatedBackground {
+	from { background-position: 0 bottom; }
+	to { background-position: 1200px bottom; }
+}
+@-webkit-keyframes animatedBackground {
+	from { background-position: 0  bottom; }
+	to { background-position: 1200px bottom; }
+}
+@-ms-keyframes animatedBackground {
+	from { background-position: 0 bottom; }
+	to { background-position: 1200px bottom; }
+}
+@-moz-keyframes animatedBackground {
+	from { background-position: 0 bottom; }
+	to { background-position: 1200px bottom; }
+}
+
+
+/*
+
+	Colors:
+	Text Color: 0e1f2b 
+
+	Navigation:
+	Light: e6eff8
+  	Dark: aab9c9
+*/

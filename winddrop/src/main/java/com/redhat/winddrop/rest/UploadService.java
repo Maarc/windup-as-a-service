@@ -2,6 +2,7 @@ package com.redhat.winddrop.rest;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,16 +42,19 @@ public class UploadService {
 
 	@Inject
 	private FileRepository fileRepository;
-	
+
 	@Resource(mappedName = "java:/ConnectionFactory")
 	private ConnectionFactory connectionFactory;
 
 	@Resource(mappedName = "java:/queue/WindupExecutionQueueMDB")
 	private Queue queue;
-	
+
+	public final static String TOKEN = "|||||";
+
 	/**
 	 * 
-	 * @param dataInput the uploaded file as MultipartFormDataInput
+	 * @param dataInput
+	 *            the uploaded file as MultipartFormDataInput
 	 * @return regular HTTP Response (200 on success and 500 on failure)
 	 */
 	@POST
@@ -63,28 +67,65 @@ public class UploadService {
 		}
 
 		String hashValue = StringUtils.EMPTY;
-		List<InputPart> inputParts = dataInput.getFormDataMap().get("file");
-		for (InputPart inputPart : inputParts) {
+		Map<String, List<InputPart>> formDataMap = dataInput.getFormDataMap();
+		if (formDataMap == null || formDataMap.isEmpty()) {
+			LOG.log(Level.SEVERE, ">>> uploadFile - formDataMap==null || formDataMap.isEmpty()");
+			return Response.status(500).entity("No data submitted").build();
+		} else {
+
+			String mail = null;
+			String packages = null;
+			
+			//LOG.log(Level.SEVERE, "formDataMap !!");
+			//for (Entry<String, List<InputPart>> entry : formDataMap.entrySet()) {
+			//	LOG.log(Level.SEVERE, "formDataMap - - - " + entry.getKey() + " - " + entry.getValue());
+			// }
 
 			try {
-				String fileName = getFileName(inputPart.getHeaders());
+				mail = formDataMap.get("inputEmail").get(0).getBodyAsString();
+				packages = formDataMap.get("inputPackages").get(0).getBodyAsString();
+			} catch (Throwable t) {
+				// Pokemon design pattern.
+			}
 
-				LOG.info(">>> uploadFile - " + fileName + "sent to the server");
+			if(mail==null || StringUtils.trimToEmpty(mail.trim()).length()<7) {
+				return Response.status(500).entity("Mail missing").build();
+			}
+			
+			if(packages==null || StringUtils.trimToEmpty(packages.trim()).length()<1) {
+				return Response.status(500).entity("No package specified").build();
+			}
+			
+			List<InputPart> fileInputParts = formDataMap.get("fileselect");
 
-				// store the file somewhere else
-				hashValue = FileUtil.storeFile(IOUtils.toByteArray(inputPart.getBody(InputStream.class, null)), fileName, fileRepository);
+			if (fileInputParts == null) {
+				LOG.log(Level.SEVERE, ">>> uploadFile - fileInputParts==null");
+				return Response.status(500).entity("No file submitted").build();
+			} else {				
+	
+				for (InputPart inputPart : fileInputParts) {
 
-				LOG.info("Adding the artefact to the windup execution queue " + hashValue +" - "+fileName);
-				if(fileName.endsWith(".war")||fileName.endsWith(".ear")) {
-					// put the file in a queue to be processed by windup)
-					queueWindupExecution(hashValue);
-				} else {
-					LOG.info(fileName + " is not an EAR or WAR binary deployment and will be ignored by Windup.");
+					try {
+						String fileName = getFileName(inputPart.getHeaders());
+						if (fileName.endsWith(".war") || fileName.endsWith(".ear")) {
+							// store the file somewhere else
+							hashValue = FileUtil.storeFile(IOUtils.toByteArray(inputPart.getBody(InputStream.class, null)), fileName, fileRepository, mail, packages);
+							// persists the report request in the file store (will be overridden once the report is available)
+							fileRepository.storeReportRequest(fileName, mail, packages,hashValue);
+							// put the file in a queue to be processed by windup)
+							LOG.info("Adding the artefact to the windup execution queue " + hashValue + " - " + fileName);
+							queueWindupExecution(hashValue, mail, packages);
+							LOG.info(">>> uploadFile - " + fileName + "sent to the server");
+						} else {
+							LOG.info(fileName + " is not an EAR or WAR binary deployment and will be ignored by Windup.");
+							return Response.status(500).entity("Uploaded file is not an EAR or WAR").build();
+						}
+
+					} catch (Exception e) {
+						LOG.log(Level.SEVERE, ">>> uploadFile - This should not have happened", e);
+						return Response.status(500).entity("Upload failure").build();
+					}
 				}
-
-			} catch (Exception e) {
-				LOG.log(Level.SEVERE, ">>> uploadFile - This should not have happened", e);
-				return Response.status(500).entity("Upload failure").build();
 			}
 		}
 
@@ -97,16 +138,17 @@ public class UploadService {
 	 * @param hashValue
 	 * @throws JMSException
 	 */
-	private void queueWindupExecution(String hashValue) throws JMSException {
-
+	private void queueWindupExecution(String hashValue, String email, String packages) throws JMSException {
 		Connection connection = connectionFactory.createConnection();
 		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		session.createProducer(queue).send(session.createTextMessage(hashValue));
+		session.createProducer(queue).send(session.createTextMessage(hashValue + TOKEN + packages + TOKEN + email + TOKEN));
+		session.close();
+		connection.close();
 	}
 
 	/**
-	 * @param header  Header sample { Content-Type=[image/png], Content-Disposition=[form-data;
-     * name="file"; filename="filename.extension"] }
+	 * @param header
+	 *            Header sample { Content-Type=[image/png], Content-Disposition=[form-data; name="file"; filename="filename.extension"] }
 	 * 
 	 * @return a filename that replaces all double quotes with nothing
 	 */
@@ -119,6 +161,5 @@ public class UploadService {
 		}
 		throw new IllegalStateException("The uploaded file has no name.");
 	}
-
 
 }

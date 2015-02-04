@@ -32,7 +32,7 @@ import com.redhat.winddrop.data.FileRepository;
  */
 public class FileUtil {
 
-	protected final static Logger LOG = Logger.getLogger(FileUtil.class.getSimpleName());
+	private final static Logger LOG = Logger.getLogger(FileUtil.class.getSimpleName());
 
 	public final static String FILE_SEPARATOR = System.getProperty("file.separator");
 
@@ -41,12 +41,22 @@ public class FileUtil {
 	public final static String WINDDROP_STORAGE_DIR = WINDDROP_BASE_DIR + "storage" + FILE_SEPARATOR;
 
 	public final static String WINDDROP_TMP_DIR = WINDDROP_BASE_DIR + "tmp" + FILE_SEPARATOR;
+	
+	public final static String REPORT_EXTENSION = "_windup_report.zip";
 
 	/**
 	 * @return Current formatted date.
 	 */
 	public static String getCurrentFormattedDate() {
-		return FastDateFormat.getInstance("yyyy-MM-dd_HH:mm:ss").format(System.currentTimeMillis());
+		return formatDate(System.currentTimeMillis());
+	}
+	
+	public static String formatDate(long date) {
+		return FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss").format(date);
+	}
+	
+	public static String formatHour(long date) {
+		return FastDateFormat.getInstance("HH:mm:ss").format(date);
 	}
 
 	/**
@@ -64,14 +74,43 @@ public class FileUtil {
 
 	/**
 	 * Stores the file somewhere else.
-	 * 
+	 *
 	 * @param content
 	 *            the bytes of the file
 	 * @param uploadedFileName
 	 *            the filename of the uploaded file
+	 * @param fr
+	 * 			  the file repository
+	 * @param submitter
+	 * 			  reference (email) to the submitter
+	 * @param packages
+	 * 			  packages to be decompiled
+	 * @return
 	 * @throws Exception
 	 */
-	public static String storeFile(byte[] content, String uploadedFileName, FileRepository fr) throws Exception {
+	public static String storeFile(byte[] content, String uploadedFileName, FileRepository fr, String submitter, String packages) throws Exception {
+		return storeFile(content, uploadedFileName, fr, submitter, packages, false, false);
+	}
+	
+	/**
+	 * Stores the file somewhere else.
+	 *
+	 * @param content
+	 *            the bytes of the file
+	 * @param uploadedFileName
+	 *            the filename of the uploaded file
+	 * @param fr
+	 * 			  the file repository
+	 * @param submitter
+	 * 			  reference (email) to the submitter
+	 * @param packages
+	 * 			  packages to be decompiled
+	 * @param isReport
+	 * @param isReportCompleted
+	 * @return
+	 * @throws Exception
+	 */
+	public static String storeFile(byte[] content, String uploadedFileName, FileRepository fr, String submitter, String packages, boolean isReport, boolean isReportCompleted) throws Exception {
 
 		final String hashValue = DigestUtils.sha256Hex(uploadedFileName + System.currentTimeMillis());
 		final String time = getCurrentFormattedDate();
@@ -99,7 +138,7 @@ public class FileUtil {
 			throw e;
 		} finally {
 			if (success) {
-				fr.storeFile(uploadedFileName, storageFileName, hashValue);
+				fr.storeFile(uploadedFileName, storageFileName, hashValue, submitter, packages, isReport, isReportCompleted);
 			} else {
 				new File(storageFileName).delete();
 			}
@@ -111,10 +150,10 @@ public class FileUtil {
 		return hashValue;
 	}
 
-	public static String storeFile(File content, String uploadedFileName, FileRepository fr) throws Exception {
+	public static String storeFile(File content, String uploadedFileName, FileRepository fr, String submitter, String packages, boolean isReport, boolean isReportCompleted) throws Exception {
 		FileInputStream fis = new FileInputStream(content);
 		try {
-			return storeFile(IOUtils.toByteArray(fis), uploadedFileName, fr);
+			return storeFile(IOUtils.toByteArray(fis), uploadedFileName, fr, submitter, packages, isReport, isReportCompleted);
 		} finally {
 			fis.close();
 		}

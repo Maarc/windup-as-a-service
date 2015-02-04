@@ -1,0 +1,18 @@
+<script type="text/template" id="file-tmpl">
+<% _.each(files, function(file) { %>
+	<tr>
+		<td><%=file.uploadFormattedDate%></td>
+		<td><%=file.submitter%></td>
+		<td>[<%=file.packages%>] <%=file.uploadedFileName%></td>
+		<td>
+			<% if (file.isReportProcessed) { %>
+			  <a href="rest/dl/file/<%=file.hashValue%>"><img src="img/icon-link.png" alt="" title="" style="display: inline-block; vertical-align: middle;"> Download</a>
+			<% } else if (file.isReportBeingProcessed) { %>
+			  processing
+			<% } else { %>
+			  queued
+			<% } %>
+		</td>
+	</tr>
+<% }); %>
+</script>

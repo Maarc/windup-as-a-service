@@ -297,11 +297,40 @@
 
 				<!-- IBM CICS Adapter -->
 				<windup:java-hint source-type="TYPE" regex="com.ibm.ctg.client.JavaGateway" hint="IBM CICS Adapter" effort="0"/>
-		
+				
+				<!-- Recipe Componenten Configuratie Framework -->
+				<windup:java-hint source-type="TYPE" regex="nl.ocwduo.componenten.configuratie.service.ConfigService"  effort="2">
+				<![CDATA[
+				Your application uses the componenten-configuratie framework. Please have a look at the <a href="https://grnap308/pages/viewpage.action?pageId=61608872">recipe explaining how to use it on EAP</a>.
+				]]>
+				</windup:java-hint>
+				
+				<!-- Recipe JCC Framework -->
+				<windup:java-hint source-type="INHERITANCE" regex="nl.ocwduo.jcc.server.scheduler.service.PluginVersionService"  effort="3">
+				<![CDATA[
+				Your application uses JCC. Please have a look at the recipes related to <a href="https://grnap308/display/JAVA/Recipe+-+How+to+use+the+jcc-server-scheduler">the usage of the JCC-server-scheduler</a> and 
+				<a href="https://grnap308/display/JAVA/Recipe+-+To+resolve+issue+related+to+version+logging+of+all+dependent+artifacts">an issue related to version logging of all dependent artifacts</a>.
+				]]>
+				</windup:java-hint>
+				
+				<!-- Recipe Bouncy Castle -->
+				<windup:java-hint source-type="IMPORT" regex="org.bouncycastle.jce.provider.BouncyCastleProvider"  effort="2">
+				<![CDATA[
+				Your application uses bouncy castle. Please have a look at this <a href="https://grnap308/display/JAVA/JCE+cannot+authenticate+the+provider+BC%2C+PrivilegedActionException">recipe resolving an authentication issue</a> you could encounter.
+				]]>
+				</windup:java-hint>
+				
+				<!-- Recipe Implement Scheduler -->
+				<windup:java-hint source-type="IMPORT" regex="^org.quartz.Scheduler$"  effort="4">
+				<![CDATA[
+				Your application uses quartz. Please have a look at this <a href="https://grnap308/display/JAVA/Recipe+-+How+to+implement+scheduling">recipe explaining how to implement scheduling on EAP</a>
+				]]>
+				</windup:java-hint>
+
 				<!-- Initial Context -->
 				<windup:java-hint source-type="METHOD" regex="((javax.naming.InitialContext)|(javax.naming.Context)).lookup" effort="1"> 
 				<![CDATA[
-				Ensure that the JNDI Name does not need to change for JBoss
+				Your application uses JNDI Bindings. Ensure that the JNDI Name does not need to change for JBoss. Please have a look at the <a href="https://grnap308/display/JAVA/Recipe+-+Configure+jndi+naming">recipe explaining how to update these on EAP</a>.
 				
 				*For Example:*
 				

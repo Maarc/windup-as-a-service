@@ -1,176 +1,102 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>WindDrop - Windup Web Fronted</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<html lang="en">
+	<head>
+			<title>Upload | Windup-as-a-Service</title>
+			<link href="img/favicon.ico" rel="shortcut icon">
+			<link href="css/bootstrap.css" rel="stylesheet">
+			<link href="css/windup.css" rel="stylesheet">
+	</head>
+	<body>
 
-    <!-- Set the tab, home page, shortcut icons -->
-    <link rel="Shortcut Icon" href="img/aerogear_icon_16x.png">
-    <link rel="apple-touch-icon" href="img/aerogear_avatar_48px.png"/>
-
-    <!-- For minification, comment out this link -->
-    <!-- Shared styles -->
-    <link rel="stylesheet" href="css/screen.css"/>
-    <link rel="stylesheet" type="text/css" media="all" href="css/styles.css" />
-
-    <!-- Set viewport scaling and zoom features -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <script type="text/javascript" src="js/libs/modernizr-2.5.3.min.js"></script>
-    <script type="text/javascript" src="js/libs/underscore-min.js"></script>
-
-    <!-- Minification - See Readme for details -->
-    <!-- For minification, comment out this file -->
-    <script type="text/javascript" src="js/app.js"></script>
-    <!-- For minification, uncomment this file -->
-    <!-- <script type="text/javascript" src="js/app.min.js"></script> -->
-
-    <script type="text/javascript">
-        yepnope([{
-            //Load CDN hosted jQuery or fall back to local file.
-            /*--------Note-----------
-            This approach should only be used if you trust the source of where the resource (JavaScript) is located.
-            In this case, use of the jquery CDN is much faster if your user's browser already has this file cached.
-            If they don't have it cached, try to load it from the CDN as this will be faster if the user is
-            located closer to a CDN than you currently hosted server.
-            */
-            //load: "http://code.jquery.com/jquery-1.7.1.min.js",
-            load: "js/libs/jquery-1.7.1.min.js",
-            complete: function() {
-                if ( !window.jQuery ) {
-                    //In production, you would want to fall back to a minified file.
-                    //We fall back to the full version because Eclipse reports false errors in some minified JavaScript files.
-                    yepnope.load( "js/libs/jquery-1.7.1.min.js" );
-                }
-            }
-        },{
-            //device detection and asynchronous script loading
-            /*--------Note-----------
-            Here we're using the yepnope framework which gives us the ability to load scripts dynamically, based on
-            Modernizr's results.
-            With Modernizr, we use media queries and touch detection to see if we are on a mobile, touch based device
-            or if we're at anything less than 480px.. this gives us a mobile ui on desktop browsers when resized to <480px
-            width for testing.
-            */
-            test: Modernizr.mq( "only all and (max-width: 640px)" ),
-            yep: {
-                //assign labeled callbacks for later execution after script loads.
-                //we are on mobile device so load appropriate CSS
-                "jqmcss": "css/jquery.mobile-1.1.0.min.css",
-                // For minification, uncomment this line
-                //"mcss": "css/m.screen.min.css"
-                // For minification, comment out this line
-                "mcss": "css/m.screen.css"
-            },
-            nope: {
-                //we are on desktop
-                // For minification, uncomment this line
-                //"scss": "css/d.screen.min.css"
-                // For minification, comment out this line
-            	"scss": "css/d.screen.css"
-            },
-            callback: {
-                //use the labeled callbacks from above, and load jQuery Mobile
-                "jqmcss": function( url, result, key ) {
-                    yepnope({
-                        load: "http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js",
-                        complete: function() {
-                            if ( !$.mobile ) {
-                                yepnope( "js/libs/jquery.mobile-1.1.0.min.js" );
-                            }
-                        }
-                    });
-                },
-                "scss": function( url, result, key ) {
-                    $( document ).ready( function() {
-                        //here we are moving content around based on the browser/device.
-                        $( "aside" ).insertAfter( $( "section" ) );
-                    });
-                }
-            },
-            complete: function() {
-                $( document ).ready( function() {
-                    //setup the app after all scripts have loaded
-                    $( "#container" ).show();
-                });
-
-                $.fn.serializeObject = function() {
-                    var o = {};
-                    var a = this.serializeArray();
-                    $.each(a, function() {
-                        if (o[this.name]) {
-                            if (!o[this.name].push) {
-                                o[this.name] = [o[this.name]];
-                            }
-                            o[this.name].push(this.value || '');
-                        } else {
-                            o[this.name] = this.value || '';
-                        }
-                    });
-                    return o;
-                };
-            }
-        }]);
-
-
-    </script>
-</head>
-<body>
-    <div id="container" style="display:none">
-        <section>
-            <h1>Windup as a Service</h1>
-            <article id="intro-art" data-role="page" data-theme="a">
-                <!-- Header -->
-                <div data-role="header" class="header">
-                    <img class="header_logo" src="img/icon_medium.png"/>
-                    <h3>WindDrop</h3>
-                    <a href="#info-aside" data-role="button" data-icon="info" class="ui-btn-right" data-iconpos="notext" data-rel="dialog"></a>
-                </div>
-                <!-- /Header -->
-                <div data-role="content">
-					<br/><br/>
-					Here you can upload one of your java application as an EAR or WAR file and then let windup process it.
-					<br/><br/>
-                </div>
-
-            </article>
-
-            <article id="upload-art" data-role="page" data-theme="a">
-                <div data-role="content">
-                    <!-- For now mapping bean validation constraints from server side model is a manual task -->
-					<form id="upload" name="upload" action="rest/upload" method="POST" enctype="multipart/form-data">
-						<fieldset>
-	                            <legend>Upload</legend>
-								<div>
-									<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" size="48"/>
-									<div id="filedrag">or drop files here</div>
-								</div>
-								
-								<div id="submitbutton">
-									<button type="submit">Upload</button>							
-								</div>
-						</fieldset>
-					</form>
-				</div>
-				
-				<br/>
-				
-				<div id="progress"></div>
-
-				<br/>
-				
-				<fieldset id="messages">
-					<legend>Status messages</legend>
-				</fieldset>
-            </article>
-
-        </section>
-
-        <!-- New HTML5 footer tag -->
-        <footer>
-            <p>This project was created by Red Hat Consulting.<br/></p>
-        </footer>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#"><img src='img/windup_logo_100px.png'/></a>
+          <div class="windup-nav-right">
+            <a href="https://github.com/Maarc/windup-as-a-service" data-toggle="tooltip" title="Github" class="social"><img title="Github" src="img/glyphicons_blue_github.png"/></a>
+          </div>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Upload</a></li>
+              <li><a href="reports.html">Reports</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
     </div>
-    <script src="js/filedrag.js"></script>
-</body>
+
+
+    <!--START OF MAIN-->
+    <div class="wrapper"> 
+
+        <div class="hero-unit content-header">
+          <div class="container">
+          <div class="row">
+            <div class="span9">
+              <h1>Upload</h1>
+            </div>
+            <div class="span3">
+              <div style="margin-top:16px; text-align:right;">
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+
+
+        <div class="container page">
+        
+          <div class="row">
+            <div class="span4 text-center">
+              <p><img src="img/windup_icon_256px.png"></p>
+            </div>
+            <div class="span8">
+              <h2>Analyse your Java application</h2>
+
+                <form class="form-horizontal" role="form" id="upload" name="upload" action="rest/upload"
+                		method="POST" enctype="multipart/form-data">
+                  <br/>
+                  <div class="form-group">
+                    <label for="inputPackages" class="col-sm-2 control-label">Packages&nbsp;&nbsp;</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="inputPackages" name="inputPackages" placeholder="Packages to analyse">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail" class="col-sm-2 control-label">Email&nbsp;&nbsp;</label>
+                    <div class="col-sm-10">
+                      <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Mail of the submitter">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputFile" class="col-sm-2 control-label">Files (ear/war)&nbsp;&nbsp;</label>
+                    <div class="col-sm-10">
+                      <input type="file" id="fileselect" name="fileselect[]" multiple="multiple" size="48"/>
+                    </div>
+                  </div>
+                  <br/>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 text-center">
+                      <button id="submitbutton" type="submit" class="btn btn-primary btn-large">Upload &raquo;</button>
+                    </div>
+                  </div>
+                </form>
+
+            </div>
+          </div>
+
+        </div>
+    </div>
+
+    <!--END OF MAIN-->
+    <div class="footer">
+      <div class="footer-logo">
+        <a href="http://redhat.com"><img src="img/redhat_logo.png"/></a>
+      </div>
+    </div>
+
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/app-index-filedrag.js"></script>
+	</body>
 </html>

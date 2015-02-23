@@ -42,7 +42,7 @@ Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
 				var name = $(v).attr("id");
 				if ("fileselect"==name) {
 					$.each(v.files, function (index,file){
-						var filename = $(file).attr("data-filename");
+						var filename = $(file).attr("name");
 						formData.append(name,file,filename)						
 					})
 				} else {

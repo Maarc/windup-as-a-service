@@ -1,0 +1,14 @@
+Build
+=======
+
+
+In order to check and update the html and generated javascript files, please execute:
+
+	cd gulp; gulp;
+
+For more information about gulp, please have a look at http://gulpjs.com/ and/or http://yeoman.io/.
+
+
+For a full build and redeployment, execute:
+
+	cd gulp; gulp; cd ..; mvn clean install jboss-as:deploy

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+			<title>Upload | Windup-as-a-Service</title>
+			<link rel="shortcut icon" href="img/favicon.ico"/>
+      <link rel="stylesheet" href="css/bootstrap.css"/>
+			<link rel="stylesheet" href="css/windup.css"/>
+	</head>
+	<body>
+
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="#"><img src="img/windup_logo_100px.png" alt=""/></a>
+        <div class="windup-nav-right">
+          <a href="https://github.com/Maarc/windup-as-a-service" data-toggle="tooltip" title="Github" class="social"><img title="Github" src="img/glyphicons_blue_github.png" alt=""/></a>
+        </div>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li class="active"><a href="#">Upload</a></li>
+            <li><a href="reports.html">Reports</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+
+    <!--START OF MAIN-->
+    <div class="wrapper"> 
+
+        <div class="hero-unit content-header">
+          <div class="container">
+          <div class="row">
+            <div class="span9">
+              <h1>Upload</h1>
+            </div>
+            <div class="span3">
+              <div style="margin-top:16px; text-align:right;">
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <div class="container page">
+        
+          <div class="row">
+            <div class="span4 text-center">
+              <p><img src="img/windup_icon_256px.png" alt=""></p>
+            </div>
+            <div class="span8">
+              <h2>Analyse your Java application</h2>
+
+                <form class="form-horizontal" role="form" id="upload" name="upload" action="rest/upload"
+                		method="POST" enctype="multipart/form-data">
+                  <br/>
+                  <div class="form-group">
+                    <label for="inputPackages" class="col-sm-2 control-label">Packages&nbsp;&nbsp;</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="inputPackages" name="inputPackages" placeholder="Packages to analyse">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail" class="col-sm-2 control-label">Email&nbsp;&nbsp;</label>
+                    <div class="col-sm-10">
+                      <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Mail of the submitter">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputFile" class="col-sm-2 control-label">Files (ear/war)&nbsp;&nbsp;</label>
+                    <div class="col-sm-10">
+                      <input type="file" id="fileselect" name="fileselect[]" multiple="multiple" size="48"/>
+                    </div>
+                  </div>
+                  <br/>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 text-center">
+                      <button id="submitbutton" type="submit" class="btn btn-primary btn-large">Upload &raquo;</button>
+                    </div>
+                  </div>
+                </form>
+
+            </div>
+          </div>
+
+        </div>
+    </div>
+
+    <!--END OF MAIN-->
+    <div class="footer">
+      <div class="footer-logo">
+        <a href="http://redhat.com"><img src="img/redhat_logo.png" alt=""/></a>
+      </div>
+    </div>
+
+    <!-- build:js js/jquery.js -->
+    <script type="text/javascript" src="/jquery/dist/jquery.js"></script>
+    <!-- endbuild -->
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/app-index-filedrag.js"></script>
+
+	</body>
+</html>

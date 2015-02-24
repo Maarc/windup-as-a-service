@@ -1,0 +1,11 @@
+
+bower init
+bower install bootstrap --save
+bower install jquery --save
+bower install modernizr --save
+bower install yepnope --save
+
+
+# npm install --save-dev gulp gulp-util gulp-clean gulp-requirejs bower-requirejs gulp-uglify gulp-less
+
+gulp

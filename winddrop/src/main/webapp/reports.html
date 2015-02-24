@@ -2,52 +2,35 @@
 <html lang="en">
 	<head>
 			<title>Reports | Windup-as-a-Service</title>
-			<link href="img/favicon.ico" rel="shortcut icon">
-			<link href="css/bootstrap.css" rel="stylesheet">
-			<link href="css/windup.css" rel="stylesheet">
-
-
-		    <script type="text/javascript" src="js/app-report.js"></script>
-
-			<!-- New libraries -->
-		    <script type="text/javascript" src="js/modernizr-2.0.6.js"></script>
-		    <script type="text/javascript" src="js/yepnope.1.0.2-min.js"></script>
-		    <script type="text/javascript" src="js/underscore-min.js"></script>
-
-		    <script type="text/javascript">
-		        yepnope([{
-		            //Load CDN hosted jQuery and fall back to local file
-		            load: "js/jquery-1.6.4.js",
-		            complete: function() {
-		                if ( !window.jQuery ) {
-		                    //In production, you would want to fall back to a minified file.
-		                    //We fall back to the full version because Eclipse reports false errors in some minified JavaScript files.
-		                    yepnope.load( "js/jquery-1.6.4.js" );
-		                }
-		            }
-		        },{
-		            //Using Modernizr, we use media queries and touch detection to see if we are on a mobile, touch based device
-		            // or if we're at anything less than 480px.. this gives us a mobile ui on desktop browsers when resized to correct
-		            // width for testing.
-		            complete: function() {
-		                $( document ).ready( function() {
-		                    $( "#container" ).show();
-		                    //Fetches the initial member table
-		                    getFileTemplate();
-		                });
-		            }
-		        }]);
-		    </script>
-
+			<link href="img/favicon.ico" rel="shortcut icon"/>
+      <link rel="stylesheet" href="css/bootstrap.css"/>
+			<link rel="stylesheet" href="css/windup.css"/>
 	</head>
 	<body>
 
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="#"><img src='img/windup_logo_100px.png'/></a>
+          <a class="brand" href="#"><img src="img/windup_logo_100px.png" alt=""/></a>
           <div class="windup-nav-right">
-            <a href="https://github.com/Maarc/windup-as-a-service" data-toggle="tooltip" title="Github" class="social"><img title="Github" src="img/glyphicons_blue_github.png"/></a>
+            <a href="https://github.com/Maarc/windup-as-a-service" data-toggle="tooltip" title="Github" class="social"><img title="Github" src="img/glyphicons_blue_github.png" alt=""/></a>
+          </div>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Upload</a></li>
+              <li><a href="reports.html">Reports</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#"><img src="img/windup_logo_100px.png" alt=""/></a>
+          <div class="windup-nav-right">
+            <a href="https://github.com/Maarc/windup-as-a-service" data-toggle="tooltip" title="Github" class="social"><img title="Github" src="img/glyphicons_blue_github.png" alt=""/></a>
           </div>
           <div class="nav-collapse collapse">
             <ul class="nav">
@@ -59,8 +42,6 @@
       </div>
     </div>
 
-
-    <!--START OF MAIN-->
     <div class="wrapper"> 
 
         <div class="hero-unit content-header">
@@ -88,7 +69,7 @@
               </p>
             </div>
             <div class="span6">
-                  <img src="img/features/main-view.png" style="padding:5px;" />
+                  <img src="img/features/main-view.png" style="padding:5px;" alt=""/>
             </div>
           </div>
 
@@ -113,13 +94,16 @@
         </div>
       	
 		</div>
-    <!--END OF MAIN-->
 
     <div class="footer">
       <div class="footer-logo">
-        <a href="http://redhat.com"><img src="img/redhat_logo.png"/></a>
+        <a href="http://redhat.com"><img src="img/redhat_logo.png" alt=""/></a>
       </div>
     </div>
+
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/underscore-min.js"></script>
+    <script type="text/javascript" src="js/app-report.js"></script>
 
 	</body>
 </html>

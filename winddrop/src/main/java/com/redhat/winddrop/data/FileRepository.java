@@ -47,6 +47,7 @@ public class FileRepository {
 	 * Empty constructor.
 	 */
 	public FileRepository() {
+
 	}
 
 	/**
@@ -90,11 +91,6 @@ public class FileRepository {
 
 	public void removeReportRequest(final String hashValue) {
 		removeFile(findByHashValue(hashValue + "_"));
-	}
-
-	public void startProcessingReportRequest(File file) {
-		file.setIsReportBeingProcessed(true);
-		storeFile(file);
 	}
 
 	/**
@@ -152,7 +148,8 @@ public class FileRepository {
 				removeFile(file);
 			}
 		}
-
+		em.flush();
+		
 		LOG.info("<<< getAllReports() - Stored size: " + results.size() + " - Real size: " + cleanResults.size());
 		return cleanResults;
 	}

@@ -7,8 +7,6 @@
 		<td>
 			<% if (file.isReportProcessed) { %>
 			  <a href="rest/dl/file/<%=file.hashValue%>"><img src="img/icon-link.png" alt="" title="" style="display: inline-block; vertical-align: middle;"> Download</a>
-			<% } else if (file.isReportBeingProcessed) { %>
-			  processing
 			<% } else { %>
 			  queued
 			<% } %>

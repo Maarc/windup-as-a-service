@@ -96,14 +96,6 @@ public class File implements Serializable {
 	protected Boolean isReportProcessed;
 	
 	/**
-	 * True if the report is being processed.
-	 */
-	@NotNull
-	@Column(name = "is_report_being_processed")
-	protected Boolean isReportBeingProcessed;
-	
-	
-	/**
 	 * Packages being analysed by windup.
 	 */
 	@NotNull
@@ -141,7 +133,6 @@ public class File implements Serializable {
 		this.packages = packages;
 		this.isReport = isReport;
 		this.isReportProcessed = isReportProcessed;
-		this.isReportBeingProcessed = false;
 	}
 
 	public String getSubmitter() {
@@ -188,14 +179,6 @@ public class File implements Serializable {
 		this.packages = packages;
 	}
 	
-	public Boolean getIsReportBeingProcessed() {
-		return isReportBeingProcessed;
-	}
-
-	public void setIsReportBeingProcessed(Boolean isReportBeingProcessed) {
-		this.isReportBeingProcessed = isReportBeingProcessed;
-	}
-
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);

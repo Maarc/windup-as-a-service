@@ -1,15 +1,3 @@
-/* Get the file template */
-function getFileTemplate() {
-	$.ajax({
-        url: "tmpl/file.tmpl",
-        dataType: "html",
-        success: function( data ) {
-            $( "head" ).append( data );
-            updateFileTable();
-        }
-    });
-}
-
 /* Builds the updated table for the member list */
 function buildFileRows(files) {
 	return _.template( $( "#file-tmpl" ).html(), {"files": files});
@@ -23,9 +11,26 @@ function updateFileTable() {
 	   success: function(data) {
             $('#files').empty().append(buildFileRows(data));
        },
-       error: function(error) {
-            //console.log("error updating table -" + error.status);
+       error: function() {
        }
    });
 }
 
+
+/* Get the file template */
+function getFileTemplate() {
+	$.ajax({
+        url: "tmpl/file.tmpl",
+        dataType: "html",
+        success: function( data ) {
+            $( "head" ).append( data );
+            updateFileTable();
+        }
+    });
+}
+
+$(document).ready( function() {
+    $( "#container" ).show();
+    //Fetches the initial member table
+    getFileTemplate();
+});

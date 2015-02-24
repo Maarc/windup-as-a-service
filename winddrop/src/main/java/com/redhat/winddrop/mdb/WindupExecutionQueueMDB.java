@@ -26,6 +26,8 @@ import java.util.logging.Logger;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -72,7 +74,7 @@ public class WindupExecutionQueueMDB implements MessageListener {
 				String packages = t.nextToken();
 				String email = t.nextToken();				
 				LOG.info("Message received for Windup execution: " + jobDescription);
-				LOG.info("hashValue: " +hashValue+" - email: "+email+" - packages: "+packages);				
+				LOG.info("hashValue: " +hashValue+" - email: "+email+" - packages: "+packages);	
 				buildAndUploadReport(hashValue, email, packages);
 			} else {
 				LOG.warning("Message of wrong type: " + message.getClass().getName());
@@ -82,12 +84,12 @@ public class WindupExecutionQueueMDB implements MessageListener {
 		}
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void buildAndUploadReport(String hashValue, String submitter, String packages) {
 		LOG.info(">>> buildAndUploadReport (hashValue=" + hashValue + ",packages=" + packages + ")");
 		List<File> filesToDelete = new ArrayList<File>();
 		try {
 			com.redhat.winddrop.model.File storedBinaryFile = fileRepository.findByHashValue(hashValue);
-			fileRepository.startProcessingReportRequest(storedBinaryFile);
 
 			String windupOutputDirectoryName = FileUtil.WINDDROP_TMP_DIR + hashValue + "_out" + FileUtil.FILE_SEPARATOR;
 			File windupOutputDirectory = new File(windupOutputDirectoryName);
@@ -104,7 +106,6 @@ public class WindupExecutionQueueMDB implements MessageListener {
 			// Copying the uploaded file and use it as input for windup.
 			FileUtil.copy(new File(StringUtils.trim(storedBinaryFile.getStorageFileName())), windupInputFile);
 			filesToDelete.add(windupInputFile);
-			// Create the output directory.
 
 			// Execute windup
 			executeWindup(packages, windupInputFile, windupOutputDirectory);

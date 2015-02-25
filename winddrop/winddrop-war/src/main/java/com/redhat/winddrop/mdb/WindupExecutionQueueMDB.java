@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -34,12 +35,11 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jboss.windup.WindupEnvironment;
-import org.jboss.windup.reporting.ReportEngine;
 
 import com.redhat.winddrop.data.FileRepository;
+import com.redhat.winddrop.ejb.WindupBean;
+import com.redhat.winddrop.ejb.WindupLegacyBean;
 import com.redhat.winddrop.rest.UploadService;
 import com.redhat.winddrop.util.FileUtil;
 
@@ -59,6 +59,12 @@ public class WindupExecutionQueueMDB implements MessageListener {
 
 	@Inject
 	private FileRepository fileRepository;
+	
+	@EJB
+	private WindupLegacyBean windupLegacy;
+
+	@EJB
+	private WindupBean windup;
 
 	/**
 	 * @see MessageListener#onMessage(Message)
@@ -108,7 +114,11 @@ public class WindupExecutionQueueMDB implements MessageListener {
 			filesToDelete.add(windupInputFile);
 
 			// Execute windup
-			executeWindup(packages, windupInputFile, windupOutputDirectory);
+			//windup.executeWindup(packages, windupInputFile, windupOutputDirectory);
+
+			// Execute windup legacy
+			windupLegacy.executeWindup(packages, windupInputFile, windupOutputDirectory);
+
 
 			// Zip the resulting report
 			String zippedReportFileName = storedBinaryFile.getUploadedFileName() + FileUtil.REPORT_EXTENSION;
@@ -145,45 +155,5 @@ public class WindupExecutionQueueMDB implements MessageListener {
 		LOG.info("<<< buildAndUploadReport");
 	}
 
-	/**
-	 * Configures and executes Windup.
-	 * 
-	 * @param packageSignature
-	 * @param windupInputFile
-	 * @param windupOutputDirectory
-	 * @throws IOException
-	 */
-	protected void executeWindup(String packageSignature, File windupInputFile, File windupOutputDirectory) throws IOException {
-
-		// Map the environment settings from the input arguments.
-		WindupEnvironment settings = new WindupEnvironment();
-		settings.setPackageSignature(packageSignature);
-		// settings.setExcludeSignature("excludePkgs");
-		// settings.setTargetPlatform("targetPlatform");
-		settings.setFetchRemote("false");
-
-		boolean isSource = false;
-		if (BooleanUtils.toBoolean("source")) {
-			isSource = true;
-		}
-		settings.setSource(isSource);
-
-		boolean captureLog = false;
-		if (BooleanUtils.toBoolean("captureLog")) {
-			captureLog = true;
-		}
-
-		String logLevel = StringUtils.trim("logLevel");
-		settings.setCaptureLog(captureLog);
-		settings.setLogLevel(logLevel);
-
-		LOG.info("captureLog " + captureLog);
-		LOG.info("logLevel " + logLevel);
-		LOG.info("isSource " + isSource);
-
-		// Run Windup
-		new ReportEngine(settings).process(windupInputFile, windupOutputDirectory);
-
-	}
 
 }

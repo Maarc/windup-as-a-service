@@ -17,7 +17,13 @@
     </licenses>
         
     <modules>
+	<!-- Working legacy windup version. Will not be required in the future. -->
         <module>windup_0_7</module>
+
+	<!-- Newest windup version. Being currently integrated in windup-as-a-service. -->
+        <module>windup_2_1_0_Final</module>
+  
+	<!-- Web application exposing windup-as-a-service -->
         <module>winddrop</module>
     </modules>
 

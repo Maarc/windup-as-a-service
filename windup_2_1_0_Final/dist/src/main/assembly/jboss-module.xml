@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>jboss</id>
+    <formats>
+        <format>dir</format>
+    </formats>
+
+   <baseDirectory>${project.build.finalName}</baseDirectory>
+
+   <!-- Add distribution files -->
+   <fileSets>
+      <fileSet>
+         <directory>src/main/resources</directory>
+         <outputDirectory>org/jboss/windup/2.1.0.Final/</outputDirectory>
+         <includes>
+            <include>**</include>
+         </includes>
+      </fileSet>
+      <fileSet>
+         <directory>${project.build.directory}/addons</directory>
+         <outputDirectory>org/jboss/windup/2.1.0.Final/addons</outputDirectory>
+         <includes>
+            <include>**</include>
+         </includes>
+      </fileSet>
+      <fileSet>
+          <directory>src/main/assembly/module</directory>
+          <outputDirectory>org/jboss/windup/2.1.0.Final/</outputDirectory>
+          <includes>
+              <include>*.xml</include>
+          </includes>
+      </fileSet>      
+   </fileSets>
+
+   <dependencySets>
+      <dependencySet>
+         <outputDirectory>org/jboss/windup/2.1.0.Final/lib</outputDirectory>
+         <useProjectArtifact>false</useProjectArtifact>
+         <excludes>
+            <exclude>org.jboss.windup.maven:nexus-indexer-data:zip:*</exclude>
+         </excludes>
+      </dependencySet>
+
+      <dependencySet>
+         <outputDirectory>org/jboss/windup/2.1.0.Final/cache</outputDirectory>
+         <useProjectArtifact>false</useProjectArtifact>
+         <unpack>true</unpack>
+         <includes>
+            <include>org.jboss.windup.maven:nexus-indexer-data:zip:*</include>
+         </includes>
+      </dependencySet>
+   </dependencySets>
+
+</assembly>

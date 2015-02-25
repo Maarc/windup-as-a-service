@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ruleset xmlns="http://windup.jboss.org/v1/xml" id="xmltestrules_1">
+    <rules>
+        <rule>
+            <when>
+                <javaclass references="org.apache.commons.{*}" in="{*}File2" as="testVariable">
+                    <location>IMPORT</location>
+                </javaclass>
+            </when>
+            <perform>
+            <iteration over="testVariable">
+            
+                <hint in="testVariable_instance" message="Rule1">
+                    <link href="http://example.com" description="Description from XML Hint Link"/>
+                </hint>
+                </iteration>
+            </perform>
+        </rule>
+        <rule>
+            <when>
+                <javaclass references="org.apache.commons.{*}" in="{*}File1">
+                    <location>METHOD_CALL</location>
+                </javaclass>
+            </when>
+            <perform>
+                <hint message="Rule2">
+                    <link href="http://example.com" description="Description from XML Hint Link"/>
+                </hint>
+            </perform>
+        </rule>
+    </rules>
+</ruleset>

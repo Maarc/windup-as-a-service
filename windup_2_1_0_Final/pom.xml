@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.jboss.windup</groupId>
+    <artifactId>windup-parent</artifactId>
+    <version>2.1.0.Final</version>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>16</version>
+    </parent>
+
+    <name>Windup Parent</name>
+    <description>Migration Tools</description>
+
+    <properties>
+        <version.furnace>2.14.0.Final</version.furnace>
+        <version.titangraph>0.5.0</version.titangraph>
+        <version.tinkerpop.blueprints>2.5.0</version.tinkerpop.blueprints>
+        <version.freemarker>2.3.20</version.freemarker>
+
+        <windup.scm.connection>scm:git:https://github.com/windup/windup.git</windup.scm.connection>
+        <windup.developer.connection>scm:git:git@github.com:windup/windup.git</windup.developer.connection>
+        <windup.scm.url>http://github.com/windup/windup</windup.scm.url>
+
+        <!-- This keeps javadoc from failing on projects with no actual .java source files -->
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+
+        <skipDeleteDeps>true</skipDeleteDeps> <!-- Don't delete deps from local repo by default. -->
+        <forkCount>.5C</forkCount>
+
+        <skipTests>true</skipTests>
+    </properties>
+
+    <scm>
+        <tag>2.1.0.Final</tag>
+        <connection>${windup.scm.connection}</connection>
+        <developerConnection>${windup.developer.connection}</developerConnection>
+        <url>${windup.scm.url}</url>
+    </scm>
+
+    <issueManagement>
+        <system>JBoss Jira</system>
+        <url>https://issues.jboss.org/browse/WINDUP</url>
+    </issueManagement>
+    <mailingLists>
+        <mailingList>
+            <name>Windup Rules Development and Usage</name>
+            <post>windup-users@lists.jboss.org</post>
+            <archive>http://lists.jboss.org/pipermail/windup-users/</archive>
+        </mailingList>
+        <mailingList>
+            <name>Windup Core Development</name>
+            <post>windup-dev@lists.jboss.org</post>
+            <archive>http://lists.jboss.org/pipermail/windup-dev/</archive>
+        </mailingList>
+    </mailingLists>
+
+    <modules>
+        <module>frames</module>
+        <module>rexster</module>
+        <module>graph</module>
+
+        <module>config</module>
+        <module>config-xml</module>
+        <module>config-groovy</module>
+
+        <module>decompiler</module>
+
+        <module>rules-base</module>
+        <module>rules-java</module>
+        <module>rules-java-ee</module>
+        <module>rules-java-archives</module>
+        <module>rules-tattletale</module>
+        <module>rules-xml</module>
+
+        <module>exec</module>
+        <module>reporting</module>
+        <module>rules-java-project</module>
+        <module>ui</module>
+
+        <module>utils</module>
+        <module>tests</module>
+        <module>test-util</module>
+        <module>bootstrap</module>
+        <module>dist</module>
+        <module>bom</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.windup</groupId>
+                <artifactId>windup-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+          <id>jboss-repository</id>
+          <name>JBoss Maven Repository</name>
+          <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>jboss-repository-group</id>
+          <name>JBoss Maven Repository Group</name>
+          <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>${testExcludeString}</exclude>
+                    </excludes>
+                    <argLine>-Xms512m -Xmx2048m -XX:MaxPermSize=768m -XX:ReservedCodeCacheSize=128m</argLine>
+                    <reuseForks>false</reuseForks>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.2</version>
+                    <configuration>
+                        <compilerVersion>1.7</compilerVersion>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                        <encoding>UTF-8</encoding>
+                        <meminitial>128m</meminitial>
+                        <maxmem>512m</maxmem>
+                        <fork>true</fork>
+                        <compilerArgs>
+                            <arg>-J-Xss4m</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jboss.forge.furnace</groupId>
+                    <artifactId>furnace-maven-plugin</artifactId>
+                    <version>${version.furnace}</version>
+                    <executions>
+                        <execution>
+                            <id>generate-dot</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>generate-dot</goal>
+                            </goals>
+                            <configuration>
+                                <attach>true</attach>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+    </build>
+
+    <profiles>
+        <profile>
+            <id>cleanup</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>deleteLocalRepoProjectArtifacts</id>
+                                <goals>
+                                    <goal>remove-project-artifact</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>deleteLocalRepoProjectDeps</id>
+                                <goals>
+                                    <goal>purge-local-repository</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>${skipDeleteDeps}</skip>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>javadocDist</id>
+            <properties>
+                <javadoc.branding>Windup ${project.version} Javadoc</javadoc.branding>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Create overview.html from README.asciidoc. -->
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>1.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>render-asciidoc</id>
+                                <phase>validate</phase>
+                                <inherited>false</inherited>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <sourceDirectory>${basedir}</sourceDirectory>
+                            <sourceDocumentName>README.asciidoc</sourceDocumentName>
+                            <outputDirectory>${basedir}/build/target/</outputDirectory>
+                            <backend>html5</backend>
+                        </configuration>
+                    </plugin>
+
+                    <!-- Aggregate Javadoc. -->
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.1</version>
+                        <executions>
+                            <execution>
+                                <id>javadocs-dist</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>aggregate-jar</goal>
+                                </goals>
+                                <configuration>
+                                    <debug>true</debug>
+                                    <verbose>true</verbose>
+                                    <maxmemory>2400m</maxmemory>
+                                    <encoding>ISO-8859-1</encoding> <!-- Workaround for non-UTF-8 javadoc comments. -->
+
+                                    <overview>build/target/README.html</overview>
+                                    <windowtitle>${javadoc.branding} API</windowtitle>
+                                    <doctitle>${javadoc.branding} API</doctitle>
+                                    <header>${javadoc.branding}</header>
+                                    <footer>${javadoc.branding}</footer>
+
+                                    <detectLinks>true</detectLinks>
+                                    <additionalparam>-link http://docs.jboss.org/forge/javadoc/2.13.2-SNAPSHOT/</additionalparam>
+
+                                    <includeDependencySources>true</includeDependencySources>
+                                    <dependencySourceExcludes>
+                                        <dependencySourceExclude>com.tinkerpop.frames:frames</dependencySourceExclude>
+                                    </dependencySourceExcludes>
+                                    <excludePackageNames>com.tinkerpop.frames:com.tinkerpop.frames.*</excludePackageNames>
+
+                                    <groups>
+                                        <group>
+                                            <title>Windup Rules</title>
+                                            <packages>org.jboss.windup.rules.*</packages>
+                                        </group>
+                                        <group>
+                                            <title>Windup Core</title>
+                                            <packages>org.jboss.windup.*</packages>
+                                        </group>
+                                    </groups>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

@@ -1,0 +1,11 @@
+Windup 2.1.0-Final
+==========
+
+
+This is a plain-copy of the Windup 2.1.0-Final code release.
+
+Only the following changes have been done:
+
+* <skipTests>true</skipTests> added to the pom.xml
+* Some elements removed in dist/pom.xml
+

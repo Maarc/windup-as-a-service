@@ -73,10 +73,18 @@ $ cd winddrop
 $ mvn clean package jboss-as:deploy
 ----
 
+=== Usage
 
-6. Access the application running here: http://localhost:8080/winddrop/
+The running application should be accessible here: http://localhost:8080/winddrop/
 
-There you can upload an WAR or EAR file. The generated report will be stored on "/tmp/windrop/storage".
+There you can enter a colon separated list of packages that have to be analyzed, enter your email (no mail will be sent) and select one or several WAR or EAR files to upload.
+
+image::https://cloud.githubusercontent.com/assets/2445024/6367415/341fc250-bcd3-11e4-9bc5-f2908a42aa7d.png[Upload]
+
+
+Once the report is generated, it will be stored locally under "/tmp/windrop/storage" and made avaiable in the "Report" tab.
+
+image::https://cloud.githubusercontent.com/assets/2445024/6367515/47419cea-bcd4-11e4-904c-5bd02014d59e.png[Report]
 
 
 
